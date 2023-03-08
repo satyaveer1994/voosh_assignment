@@ -1,5 +1,6 @@
 const orderModel = require("../models/orderModel");
 const validator = require("../middelwear/validator");
+const userModel= require('../models/userModel')
 
 const createOrder = async function (req, res) {
   try {
@@ -17,10 +18,11 @@ const createOrder = async function (req, res) {
         .status(400)
         .send({ status: false, massage: "please enter user_Id" });
     }
-    const user = await userModel.findById(user_Id);
-    if (!validator.isValid(user)) {
-      return res.status(400).send({ status: false, massage: "user not found" });
-    }
+    // const users= await userModel.findById(user_Id);
+    // console.log(user_Id)
+    // if (!validator.isValid(users)) {
+    //   return res.status(400).send({ status: false, massage: "user not found" });
+    // }
 
     if (!validator.isValid(phone)) {
       return res
@@ -52,16 +54,12 @@ const createOrder = async function (req, res) {
 const getOrder = async function (req, res) {
   try {
     const { user_id } = req.query;
-    const users = await userModel.findById(user_id);
-    if (!validator.isValid(users)) {
-      return res
-        .status(400)
-        .send({ status: false, massage: "users not found" });
-    }
+    
     const orders = await orderModel.find({ user_id });
     return res
       .status(201)
       .send({ status: true, message: "successful", data: orders });
+      
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }
